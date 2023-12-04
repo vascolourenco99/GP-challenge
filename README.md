@@ -1,4 +1,4 @@
-# Project Amortization Optimization
+# Project Amortization
 
 This PHP project involves managing project amortizations, processing payments, and optimizing the amortization processing function for better performance.
 
@@ -25,6 +25,8 @@ The Project class represents projects, including functions for finding a project
 The Promoter class represents project promoter.
 
 ### processPaymentsOnAmortizationTest.php
+I created tests for the processPaymentsOnAmortization function because it is the most sensitive function, and therefore, I need it to be very robust against any type of errors.
+
 This file contains PHPUnit test cases for the processPaymentsOnAmortization function, checking successful and unsuccessful payment scenarios.
 
 ## How to Run Tests
@@ -39,3 +41,13 @@ phpunit processPaymentsOnAmortizationTest.php
 The `projectAmortizationOptimize` function processes amortizations in chunks, improving performance and memory management.
 
 The find functions in Project.php and Promoter.php emphasize that they should ideally call API endpoints or fetch records from a database.
+
+
+# DATABASE EXPLANATION
+In the project's root directory, there is also an image with the database schema that I thougth. 
+
+In addition to the three initial tables (projects, amortizations, payments), I found it interesting and advantageous to add two more tables.
+
+The first one, `global groups`, seemed interesting to have a table that gathers all the members of a project because not only does it make it easier to send notifications if something has happened with the project, but we can also later analyze the group's and members' history.
+
+The second one, `members`, is used to store specific information about a member (email, name, username), and if it makes sense later, we can add more columns (nationality, age, etc) to understand patterns that exist for certain projects and collect more information to the markting/sales team.

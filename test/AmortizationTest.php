@@ -132,4 +132,7 @@ class processPaymentsOnAmortizationTest extends TestCase
         $this->assertEquals($result, 400.0);
 
     }
+
+
+    // MORE TESTS PLEASE
 }
