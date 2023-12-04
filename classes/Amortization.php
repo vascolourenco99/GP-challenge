@@ -50,8 +50,8 @@ class Amortization
             return "Payments processed successfully";
         } else {
             try {
-                // $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
-                // $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
+                $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
+                $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
 
                 return "Payments not processed successfully";
             } catch (Exception $e) {
