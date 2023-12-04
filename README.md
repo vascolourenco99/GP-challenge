@@ -3,7 +3,7 @@
 This PHP project involves managing project amortizations, processing payments, and optimizing the amortization processing function for better performance.
 
 ## Files Overview
-index.php
+### index.php
 This file serves as an entry point and is used to set up a "production environment" for testing the projectAmortizationOptimize function.
 
 ### Amortization.php
