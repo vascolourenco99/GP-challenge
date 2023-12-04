@@ -20,9 +20,9 @@ $globalGroup->addMember($member2);
 $amortization = [];
 
 for ($i = 0; $i < 1000; $i++) {
-    $amortization = new Amortization($i + 1, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); // Assuming unique IDs for each amortization
-    $payment1 = new Payment($i + 2, $amortization->id, 300.0, 1, 'pending'); // Assuming unique IDs for each payment
-    $payment2 = new Payment($i + 3, $amortization->id, 200.0, 1, 'pending'); // Assuming unique IDs for each payment
+    $amortization = new Amortization($i + 1, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); 
+    $payment1 = new Payment($i + 2, $amortization->id, 300.0, 1, 'pending'); 
+    $payment2 = new Payment($i + 3, $amortization->id, 200.0, 1, 'pending'); 
     $amortization->payments = [$payment1, $payment2];
 
     $amortizations[] = $amortization;
