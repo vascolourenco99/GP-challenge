@@ -35,6 +35,12 @@ class Amortization
         return $total;
     }
     
+    /*
+        This function is responsible for overall management 
+        to check if the amortizations have been paid. 
+        If they haven't, an email notification is sent 
+        to both the promoter and the project members.
+    */
     public function processPaymentsOnAmortization($givenDate, PHPMailer $mailer, $PROJECT, $PROMOTER, $globalGroup)
     {
         if (empty($this->payments)) {
@@ -50,8 +56,9 @@ class Amortization
             return "Payments processed successfully";
         } else {
             try {
-                // $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
-                // $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
+
+                $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
+                $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
 
                 return "Payments not processed successfully";
             } catch (Exception $e) {
@@ -66,12 +73,12 @@ class Amortization
         $mailer->isSMTP();
         $mailer->Host = 'smtp.gmail.com';
         $mailer->SMTPAuth = true;
-        $mailer->Username = 'vascocorreia99@gmail.com';
-        $mailer->Password = 'pwevlfyzvseqebui';
+        $mailer->Username = 'youremail.gmail.com';
+        $mailer->Password = 'password';
         $mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mailer->Port = 465;
 
-        $mailer->setFrom('vascocorreia99@gmail.com', 'Mailer');
+        $mailer->setFrom('youremail.gmail.com', 'Mailer');
         $mailer->addAddress($recipientEmail);
 
         $mailer->isHTML(true);

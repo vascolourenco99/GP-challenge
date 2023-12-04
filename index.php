@@ -1,4 +1,11 @@
 <?php
+/* 
+  This file is used to create instances of classes 
+  to set up a "production environment" for testing 
+  the projectAmortizationOptimize(line 53) function.
+*/
+
+
 
 require_once 'classes/Project.php';
 require_once 'classes/Amortization.php';
@@ -9,54 +16,43 @@ require_once 'classes/Member.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-// Create dummy data
-$globalGroup = new GlobalGroup(1, 'Project Dummy Global Group', []);
-$member1 = new Member(1, 'user1@gmail.com');
-$member2 = new Member(2, 'user2@gmail.com');
-
-$globalGroup->addMember($member1);
-$globalGroup->addMember($member2);
-
-$amortization = [];
-
-for ($i = 0; $i < 1000; $i++) {
-    $amortization = new Amortization($i + 1, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); 
-    $payment1 = new Payment($i + 2, $amortization->id, 300.0, 1, 'pending'); 
-    $payment2 = new Payment($i + 3, $amortization->id, 200.0, 1, 'pending'); 
-    $amortization->payments = [$payment1, $payment2];
-
-    $amortizations[] = $amortization;
-}
-
-foreach ($amortizations as $amortization) {
-    echo $amortization->amount . "</br>";
-}
-
-
-// Associate payments with the amortization
-$PROJECT = Project::find($amortization->project_id);
-$PROMOTER = Promoter::find($PROJECT->promoter_id);
-
-$PROJECT->balance . "</br>";
-
 $givenDate = '2023-12-16'; 
 $mailer = new PHPMailer(true);
 
+$globalGroup = new GlobalGroup(1, 'Project Dummy Global Group', []);
+$member1 = new Member(1, 'user1@gmail.com');
+$member2 = new Member(2, 'user2@gmail.com');
+$globalGroup->addMember($member1);
+$globalGroup->addMember($member2);
 
-// melhorar esta logica
+$amortization = new Amortization(1, 1, 500.0, '2023-12-15', 'pending'); 
+$payment1 = new Payment(1, $amortization->id, 300.0, 1, 'pending'); 
+$payment2 = new Payment(2, $amortization->id, 200.0, 1, 'pending'); 
+$amortization->payments = [$payment1, $payment2];
 
-$chunkSize = 10; // Adjust the chunk size as needed
-$totalAmortizations = count($amortizations);
 
-for ($offset = 0; $offset < $totalAmortizations; $offset += $chunkSize) {
-    $chunk = array_slice($amortizations, $offset, $chunkSize);
+// Associate amortizations with projects
+$PROJECT = Project::find($amortization->project_id);
+$PROMOTER = Promoter::find($PROJECT->promoter_id);
+$PROJECT->addAmortization($amortization);
 
-    foreach ($chunk as $amortization) {
-        // Process each amortization
-        $result = $amortization->processPaymentsOnAmortization($givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
-
-        // Handle the result if needed
-        // For example, log success or failure
-        echo $result . "\n";
-    }
+/*
+  I created this for loop to manipulate the quantity of amortizations 
+  that a project can have, in order to rigorously test 
+  the processing of the projectAmortizationOptimize function.
+*/
+for ($i = 0; $i < 20; $i++) {
+    $amortization = new Amortization($i + 2, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); 
+    $payment1 = new Payment($i + 1, $amortization->id, 300.0, 1, 'pending'); 
+    $payment2 = new Payment($i + 2, $amortization->id, 200.0, 1, 'pending'); 
+    $amortization->payments = [$payment1, $payment2];
+    
+    $PROJECT->addAmortization($amortization);
 }
+
+$result = Project::projectAmortizationOptimize($PROJECT->amortizations, $givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
+
+foreach ($result as $result) {
+    echo $result . '<br/>';
+}
+
