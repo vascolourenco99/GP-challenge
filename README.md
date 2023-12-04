@@ -36,6 +36,6 @@ phpunit processPaymentsOnAmortizationTest.php
 
 ### Important Points
 
-#### The projectAmortizationOptimize function processes amortizations in chunks, improving performance and memory management.
+The `projectAmortizationOptimize` function processes amortizations in chunks, improving performance and memory management.
 
-#### The find functions in Project.php and Promoter.php emphasize that they should ideally call API endpoints or fetch records from a database.
+The find functions in Project.php and Promoter.php emphasize that they should ideally call API endpoints or fetch records from a database.
