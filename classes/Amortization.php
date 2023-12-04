@@ -40,18 +40,18 @@ class Amortization
         if (empty($this->payments)) {
             return "No payments";
         }
-
+        
 
         if ($this->schedule_date <= $givenDate && $this->state === 'pending' && $this->totalPayments() == $this->amount && $PROJECT->balance >= $this->amount) {
             $totalAmount = $this->amount;
             $PROJECT->balance -= $totalAmount;
             $this->state = 'paid';
-
+            
             return "Payments processed successfully";
         } else {
             try {
-                $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
-                $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
+                // $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name);
+                // $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name);
 
                 return "Payments not processed successfully";
             } catch (Exception $e) {

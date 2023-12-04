@@ -17,10 +17,20 @@ $member2 = new Member(2, 'user2@gmail.com');
 $globalGroup->addMember($member1);
 $globalGroup->addMember($member2);
 
-$amortization = new Amortization(1, 1, 500.0, '2023-12-15', 'pending');
-$payment1 = new Payment(1, $amortization->id, 300.0, 1, 'pending');
-$payment2 = new Payment(2, $amortization->id, 200.0, 1, 'pending');
-$amortization->payments = [$payment1, $payment2];
+$amortization = [];
+
+for ($i = 0; $i < 1000; $i++) {
+    $amortization = new Amortization($i + 1, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); // Assuming unique IDs for each amortization
+    $payment1 = new Payment($i + 2, $amortization->id, 300.0, 1, 'pending'); // Assuming unique IDs for each payment
+    $payment2 = new Payment($i + 3, $amortization->id, 200.0, 1, 'pending'); // Assuming unique IDs for each payment
+    $amortization->payments = [$payment1, $payment2];
+
+    $amortizations[] = $amortization;
+}
+
+foreach ($amortizations as $amortization) {
+    echo $amortization->amount . "</br>";
+}
 
 
 // Associate payments with the amortization
@@ -33,4 +43,20 @@ $givenDate = '2023-12-16';
 $mailer = new PHPMailer(true);
 
 
-$amortization->processPaymentsOnAmortization($givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
+// melhorar esta logica
+
+$chunkSize = 10; // Adjust the chunk size as needed
+$totalAmortizations = count($amortizations);
+
+for ($offset = 0; $offset < $totalAmortizations; $offset += $chunkSize) {
+    $chunk = array_slice($amortizations, $offset, $chunkSize);
+
+    foreach ($chunk as $amortization) {
+        // Process each amortization
+        $result = $amortization->processPaymentsOnAmortization($givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
+
+        // Handle the result if needed
+        // For example, log success or failure
+        echo $result . "\n";
+    }
+}
