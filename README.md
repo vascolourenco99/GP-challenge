@@ -24,6 +24,8 @@ The Project class represents projects, including functions for finding a project
 ### Promoter.php
 The Promoter class represents project promoter.
 
+### 
+
 ### processPaymentsOnAmortizationTest.php
 I created tests for the processPaymentsOnAmortization function because it is the most sensitive function, and therefore, I need it to be very robust against any type of errors.
 
@@ -32,8 +34,13 @@ This file contains PHPUnit test cases for the processPaymentsOnAmortization func
 ## How to Run Tests
 To run tests, execute the following command in the terminal:
 
+### notes: 
+!IMPORTANT! if you want to run tests commented the line 70, 71, file `Amortization.php` and paste this code `return $reasonsString;` 
+
 ```bash
-phpunit processPaymentsOnAmortizationTest.php
+php vendor/bin/phpunit test/AmortizationTest.php.php
+
+php vendor/bin/phpunit test/ProjectTest.php
 ```
 
 ### Important Points

@@ -32,6 +32,26 @@ class Project
         return new Project(1, 1, 1000.0, 'Dummy Project', 1, []);
     }
 
+    public function getAmortizationById($amortizationId)
+    {
+        foreach ($this->amortizations as $amortization) {
+            if ($amortization->id === $amortizationId) {
+                return $amortization;
+            }
+        }
+        return null;
+    }
+
+    public function addPaymenToBalance(Payment $payment)
+    {
+        // Check if the associated amortization is pending before adding the payment to the balance
+        $amortization = $this->getAmortizationById($payment->amortization_id);
+
+        if ($amortization && $amortization->state === 'pending') {
+            $this->balance += $payment->amount;
+        }
+    }
+
     public function addAmortization($amortization)
     {
         $this->amortizations[] = $amortization;

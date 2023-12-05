@@ -5,8 +5,6 @@
   the projectAmortizationOptimize(line 53) function.
 */
 
-
-
 require_once 'classes/Project.php';
 require_once 'classes/Amortization.php';
 require_once 'classes/Payment.php';
@@ -16,7 +14,8 @@ require_once 'classes/Member.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-$givenDate = '2023-12-16'; 
+$givenDate = new DateTime('2023-12-06'); 
+
 $mailer = new PHPMailer(true);
 
 $globalGroup = new GlobalGroup(1, 'Project Dummy Global Group', []);
@@ -25,15 +24,17 @@ $member2 = new Member(2, 'user2@gmail.com');
 $globalGroup->addMember($member1);
 $globalGroup->addMember($member2);
 
-$amortization = new Amortization(1, 1, 500.0, '2023-12-15', 'pending'); 
-$payment1 = new Payment(1, $amortization->id, 300.0, 1, 'pending'); 
-$payment2 = new Payment(2, $amortization->id, 200.0, 1, 'pending'); 
+
+$amortization = new Amortization(1, 1, 500.0, new DateTime('2023-12-06'), 'pending'); 
+$payment1 = new Payment(1, $amortization->project_id, $amortization->id, 300.0, 1, 'pending'); 
+$payment2 = new Payment(2, $amortization->project_id, $amortization->id, 200.0, 1, 'pending'); 
 $amortization->payments = [$payment1, $payment2];
 
-
-// Associate amortizations with projects
-$PROJECT = Project::find($amortization->project_id);
+// Associate amortizations with the same project
+$PROJECT = Project::find($amortization->project_id); 
 $PROMOTER = Promoter::find($PROJECT->promoter_id);
+$PROJECT->addPaymenToBalance($payment1);
+$PROJECT->addPaymenToBalance($payment2);
 $PROJECT->addAmortization($amortization);
 
 /*
@@ -41,18 +42,27 @@ $PROJECT->addAmortization($amortization);
   that a project can have, in order to rigorously test 
   the processing of the projectAmortizationOptimize function.
 */
-for ($i = 0; $i < 20; $i++) {
-    $amortization = new Amortization($i + 2, 1, 500.0 + ($i * $i), '2023-12-15', 'pending'); 
-    $payment1 = new Payment($i + 1, $amortization->id, 300.0, 1, 'pending'); 
-    $payment2 = new Payment($i + 2, $amortization->id, 200.0, 1, 'pending'); 
-    $amortization->payments = [$payment1, $payment2];
-    
-    $PROJECT->addAmortization($amortization);
+for ($i = 1; $i < 3; $i++) {
+  $amortization = new Amortization($i + 2, 1, 500.0 + ($i * $i), new DateTime('2023-12-05'), 'pending'); 
+  $payment1 = new Payment($i + 1, $amortization->project_id, $amortization->id, 300.0, 1, 'pending'); 
+  $payment2 = new Payment($i + 2, $amortization->project_id, $amortization->id, 200.0, 1, 'pending'); 
+  $amortization->payments = [$payment1, $payment2];
+  $PROJECT->addAmortization($amortization);
 }
+for ($i = 1; $i < 3; $i++) {
+  $amortization = new Amortization($i + 2, 1, 500.0 + ($i * $i), new DateTime('2023-12-07'), 'pending'); 
+  $payment1 = new Payment($i + 1, $amortization->project_id, $amortization->id, 300.0, 1, 'pending'); 
+  $payment2 = new Payment($i + 2, $amortization->project_id, $amortization->id, 200.0, 1, 'pending'); 
+  $amortization->payments = [$payment1, $payment2];
+  $PROJECT->addAmortization($amortization);
+}
+
+
+
 
 $result = Project::projectAmortizationOptimize($PROJECT->amortizations, $givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
 
+// uncomment the following line to see the result of the optimize function
 foreach ($result as $result) {
-    echo $result . '<br/>';
+  echo $result . '<br/>';
 }
-
