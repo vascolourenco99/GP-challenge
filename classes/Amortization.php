@@ -45,7 +45,7 @@ class Amortization
      *
      * @return float
      */
-    public function totalPayments()
+    public function totalPayments() : float
     {
         $total = 0;
 
@@ -108,7 +108,7 @@ class Amortization
      *
      * @return bool
      */
-    private function processPayments($givenDate, $PROJECT)
+    private function processPayments($givenDate, $PROJECT) : bool
     {
         $amortizationDate = $this->schedule_date->format('Y-m-d');
 
@@ -127,7 +127,7 @@ class Amortization
      *
      * @return bool
      */
-    private function shouldNotBePaidYet($givenDate)
+    private function shouldNotBePaidYet($givenDate) : bool
     {
         return $givenDate < $this->schedule_date && $this->state === 'pending';
     }

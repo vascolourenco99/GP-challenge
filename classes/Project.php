@@ -3,7 +3,7 @@
 /**
  * Class Project
  *
- * Represents a project with properties such as `id`, `promoter_id`, `balance`, `name`, `global_group_id`, and an array of `amortizations`.
+ * Represents a project with properties such as id, promoter_id, balance, name, global_group_id, and an array of amortizations.
  */
 include_once 'classes/Amortization.php';
 
@@ -46,7 +46,7 @@ class Project
      * Ideally, this function should call an API endpoint or fetch records from a database.
      */
 
-    public static function find($projectId)
+    public static function find($projectId) : Project
     {
         /*
             This function serves to return a project. 
@@ -65,7 +65,7 @@ class Project
      * @return Amortization|null
      */
 
-    public function getAmortizationById($amortizationId)
+    public function getAmortizationById($amortizationId) : ?Amortization
     {
         foreach ($this->amortizations as $amortization) {
             if ($amortization->id === $amortizationId) {
@@ -81,7 +81,7 @@ class Project
      * @param Payment $payment
      */
 
-    public function addPaymenToBalance(Payment $payment)
+    public function addPaymenToBalance(Payment $payment) : void
     {
         // Check if the associated amortization is pending before adding the payment to the balance
         $amortization = $this->getAmortizationById($payment->amortization_id);
@@ -121,7 +121,7 @@ class Project
      * @return array
      */
 
-    public static function projectAmortizationOptimize($amortizations, $givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup)
+    public static function projectAmortizationOptimize($amortizations, $givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup) : array
     {
         $chunkSize = 10; // Adjust the chunk size as needed (smaller is better for a lot of data);
         $totalAmortizations = count($amortizations);

@@ -33,7 +33,7 @@ class Promoter
      * @return Promoter|null
      * Ideally, this function should call an API endpoint or fetch records from a database.
      */
-    public static function find($promoterId)
+    public static function find($promoterId) : ?Promoter
     {
         $promoters = [
             1 => new Promoter(1, 'user', 'user@gmail.com'),
