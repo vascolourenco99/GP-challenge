@@ -10,9 +10,16 @@ require_once 'classes/Promoter.php';
 require_once 'classes/GlobalGroup.php';
 require_once 'classes/Member.php';
 
+/**
+ * Test class for the processPaymentsOnAmortization method in the Amortization class.
+ */
 
 class processPaymentsOnAmortizationTest extends TestCase
 {
+
+    /**
+     * Test the processPaymentsOnAmortization method for a successful payment.
+     */
     public function testProcessPaymentsOnAmortization_SuccessfulPayment()
     {
         $givenDate = new DateTime('2023-12-06');
@@ -38,6 +45,10 @@ class processPaymentsOnAmortizationTest extends TestCase
 
         $this->assertEquals("Amortization ID:1 payments processed successfully", $result);
     }
+
+    /**
+     * Test the processPaymentsOnAmortization method when there are no payments for the amortization.
+     */
     public function testProcessPaymentsOnAmortization_NoPayments()
     {
         $givenDate = new DateTime('2023-12-05');
@@ -59,6 +70,10 @@ class processPaymentsOnAmortizationTest extends TestCase
 
         $this->assertEquals("No payments for amortization 1", $result);
     }
+
+    /**
+     * Test the processPaymentsOnAmortization method for an unsuccessful payment due to a date mismatch.
+     */
 
     public function testProcessPaymentsOnAmortization_UnsuccessfullPaymentDelayedDate()
     {
@@ -86,6 +101,10 @@ class processPaymentsOnAmortizationTest extends TestCase
 
         $this->assertEquals("Date mismatch (Amortization date: {$amortizationDate->format('Y-m-d')}, Given date: {$givenDate->format('Y-m-d')})", $result);
     }
+
+     /**
+     * Test the processPaymentsOnAmortization method for insufficient balance in the project.
+     */
 
     public function testProcessPaymentsOnAmortization_InsufficientBalance()
     {
@@ -119,7 +138,9 @@ class processPaymentsOnAmortizationTest extends TestCase
         $this->assertEquals("Insufficient balance in the project", $result);
     }
     
-
+    /**
+     * Test adding multiple amortizations to a project.
+     */
     public function testProcessPaymentsOnAmortization_AddAmortizations()
     {
         $amortization = new Amortization(1, 1, 500.0, new DateTime('2023-12-06'), 'pending');

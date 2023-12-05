@@ -2,6 +2,9 @@
 
 This PHP project involves managing project amortizations, processing payments, and optimizing the amortization processing function for better performance.
 
+
+To make the function work, it is necessary to go to the `sendEmail` function in the SendEmail file and change lines 19 and 20 to your personal email and password. Finally, in the index.php file, lines 25/26, change the `email` to the one you want to send the notifications.
+
 ## Files Overview
 ### index.php
 This file serves as an entry point and is used to set up a "production environment" for testing the projectAmortizationOptimize function.

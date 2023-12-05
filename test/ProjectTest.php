@@ -6,6 +6,9 @@ require_once 'classes/Project.php';
 require_once 'classes/Amortization.php';
 require_once 'classes/Payment.php';
 
+/**
+ * Test class for the Project class.
+ */
 class ProjectTest extends TestCase
 {
     private function testProject()
@@ -44,6 +47,10 @@ class ProjectTest extends TestCase
         return new Payment(1, 1, 1, -300.0, 1, 'pending');
     }
 
+    /**
+     * Test if the Project class returns the correct amortization instance by ID.
+     */
+
     public function testProject_ReturnsCorrectAmortization()
     {
         $project = $this->testProject();
@@ -58,6 +65,10 @@ class ProjectTest extends TestCase
         $this->assertEquals($amortizationId, $amortization->id);
     }
 
+     /**
+     * Test if the Project class returns null for a non-existing amortization ID.
+     */
+
     public function testProject_ReturnsNullForNonExistingAmortization()
     {
         $project = $this->testProject();
@@ -68,6 +79,9 @@ class ProjectTest extends TestCase
         $this->assertNull($amortization);
     }
 
+    /**
+     * Test if the Project class updates the balance correctly after adding a payment.
+     */
     public function testProject_UpdatesBalance()
     {
         $project = $this->testProject();
@@ -82,6 +96,9 @@ class ProjectTest extends TestCase
         $this->assertEquals($expectedBalance, $project->balance);
     }
 
+    /**
+     * Test if the Project class does not update the balance if the payment amount is negative.
+     */
     public function testProject_NoUpdatesBalanceIfAmoutIsNegative()
     {
         $project = $this->testProject();
@@ -98,6 +115,10 @@ class ProjectTest extends TestCase
         $this->assertEquals($expectedBalance, $result);
     }
 
+
+    /**
+     * Test if the Project class ignores adding payment for a paid amortization.
+     */
     public function testProject_IgnoresPaidAmortization()
     {
         $project = $this->testProject();
