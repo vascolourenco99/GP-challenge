@@ -1,8 +1,10 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
+include_once __DIR__ . '/../util/sendEmail.php';
+include_once __DIR__ . '/../util/reasonsToNotWork.php';
 
 require 'vendor/autoload.php';
 
@@ -51,7 +53,7 @@ class Amortization
 
         $amortizationDate = $this->schedule_date->format('Y-m-d');
 
-        if ($amortizationDate == $givenDate->format('Y-m-d') && $this->state === 'pending' && $this->totalPayments() == $this->amount && $PROJECT->balance >= $this->amount) {
+        if ($this->ProcessPayments($givenDate, $PROJECT)) {
             $totalAmount = $this->amount;
             $PROJECT->balance -= $totalAmount;
             $this->state = 'paid';
@@ -59,64 +61,35 @@ class Amortization
             return "Amortization ID:{$this->id} payments processed successfully";
         }
 
-        if ($givenDate < $this->schedule_date && $this->state === 'pending') {
+        if ($this->shouldNotBePaidYet($givenDate)) {
             return "Amortization ID:{$this->id} has not been paid yet because the date is not today";
         }
 
         try {
 
-            $reasons = $this->reasonsToNotWork($amortizationDate, $givenDate, $PROJECT);
+            $reasons = reasonsToNotWork($amortizationDate, $givenDate, $PROJECT, $this->amount);
             $reasonsString = implode(', ', $reasons);
-            $this->sendEmail($mailer, $PROMOTER->email, $PROJECT->name, $reasonsString);  // <- comment this to run the test without sending emails
-            $this->sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name,  $reasonsString); // <- comment this to run the test without sending emails
+            sendEmail($mailer, $PROMOTER->email, $PROJECT->name, $reasonsString);  // <- comment this to run the test without sending emails
+            sendEmailToGroupMembers($mailer, $globalGroup, $PROJECT->name,  $reasonsString); // <- comment this to run the test without sending emails
         } catch (Exception $e) {
             return "Error sending email: {$e->getMessage()}";
         }
     }
 
-    private function reasonsToNotWork($amortizationDate, $givenDate, $PROJECT)
+    private function ProcessPayments($givenDate, $PROJECT)
     {
-        $reasons = [];
+        $amortizationDate = $this->schedule_date->format('Y-m-d');
 
-        if ($amortizationDate !== $givenDate->format('Y-m-d')) {
-            $reasons[] = "Date mismatch (Amortization date: $amortizationDate, Given date: {$givenDate->format('Y-m-d')})";
-        }
-
-
-        if ($PROJECT->balance < $this->amount) {
-            $reasons[] = "Insufficient balance in the project";
-        }
-
-        return $reasons;
+        return (
+            $amortizationDate == $givenDate->format('Y-m-d') &&
+            $this->state === 'pending' &&
+            $this->totalPayments() == $this->amount &&
+            $PROJECT->balance >= $this->amount
+        );
     }
 
-    private function sendEmail(PHPMailer $mailer, $recipientEmail, $projectName, $reasons)
+    private function shouldNotBePaidYet($givenDate)
     {
-        $mailer->SMTPDebug = SMTP::DEBUG_SERVER;
-        $mailer->isSMTP();
-        $mailer->Host = 'smtp.gmail.com';
-        $mailer->SMTPAuth = true;
-        $mailer->Username = 'YOUREMAIL@gmail';
-        $mailer->Password = 'PASSWORD';
-        $mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $mailer->Port = 465;
-
-        $mailer->setFrom('youremail@gmail.com', 'Mailer');
-        $mailer->addAddress($recipientEmail);
-
-        $mailer->isHTML(true);
-        $mailer->Subject = 'Amortization Notification';
-        $mailer->Body = "Amortization not processed for project $projectName. Reasons: $reasons";
-
-        $mailer->send();
-    }
-
-    private function sendEmailToGroupMembers(PHPMailer $mailer, $globalGroup, $projectName,  $reasonsString)
-    {
-        $members = $globalGroup->members;
-
-        foreach ($members as $member) {
-            $this->sendEmail($mailer, $member->email, $projectName, $reasonsString);
-        }
+        return $givenDate < $this->schedule_date && $this->state === 'pending';
     }
 }
