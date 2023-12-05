@@ -1,10 +1,23 @@
-<?php 
+<?php
+
+/**
+ * Class Promoter
+ *
+ * Represents a promoter with properties such as `id`, `name`, and `email`.
+ */
 class Promoter 
 {
     public $id;
     public $name;
     public $email;
 
+    /**
+     * Promoter constructor.
+     *
+     * @param int    $id
+     * @param string $name
+     * @param string $email
+     */
     public function __construct($id, $name, $email)
     {
         $this->id = $id;
@@ -12,15 +25,16 @@ class Promoter
         $this->email = $email;
     }
     
+    /**
+     * Static method to find a promoter by their ID.
+     *
+     * @param int $promoterId
+     *
+     * @return Promoter|null
+     * Ideally, this function should call an API endpoint or fetch records from a database.
+     */
     public static function find($promoterId)
     {
-        /*
-            This function serves to return a promoter. 
-            However, I want to emphasize that this function 
-            should ideally call an API endpoint 
-            or fetch records from a database.
-        */
-
         $promoters = [
             1 => new Promoter(1, 'user', 'user@gmail.com'),
         ];
@@ -28,9 +42,7 @@ class Promoter
         if (isset($promoters[$promoterId])) {
             return $promoters[$promoterId];
         } else {
-            
             return null;
         }
     }
-
 }

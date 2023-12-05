@@ -8,7 +8,11 @@ include_once __DIR__ . '/../util/reasonsToNotWork.php';
 
 require 'vendor/autoload.php';
 
-
+/**
+ * Class Amortization
+ *
+ * Represents an amortization with associated payments and functionality for payment processing.
+ */
 class Amortization
 {
     public $id;
@@ -18,6 +22,15 @@ class Amortization
     public $state;
     public $payments = [];
 
+    /**
+     * Amortization constructor.
+     *
+     * @param int       $id
+     * @param int       $project_id
+     * @param float     $amount
+     * @param DateTime  $schedule_date
+     * @param string    $state
+     */
     public function __construct($id, $project_id, $amount, $schedule_date, $state)
     {
         $this->id = $id;
@@ -27,7 +40,11 @@ class Amortization
         $this->state = $state;
     }
 
-
+    /**
+     * Calculates the total amount of payments associated with the amortization.
+     *
+     * @return float
+     */
     public function totalPayments()
     {
         $total = 0;
@@ -39,12 +56,20 @@ class Amortization
         return $total;
     }
 
-    /*
-        This function is responsible for overall management 
-        to check if the amortizations have been paid. 
-        If they haven't, an email notification is sent 
-        to both the promoter and the project members.
-    */
+    /**
+     *   This function is responsible for overall management 
+     *   to check if the amortizations have been paid. 
+     *   If they haven't, an email notification is sent 
+     *   to both the promoter and the project members.
+     *
+     * @param DateTime  $givenDate
+     * @param PHPMailer $mailer
+     * @param Project   $PROJECT
+     * @param Promoter  $PROMOTER
+     * @param GlobalGroup $globalGroup
+     *
+     * @return string
+     */
     public function processPaymentsOnAmortization($givenDate, PHPMailer $mailer, $PROJECT, $PROMOTER, $globalGroup)
     {
         if (empty($this->payments)) {
@@ -53,7 +78,7 @@ class Amortization
 
         $amortizationDate = $this->schedule_date->format('Y-m-d');
 
-        if ($this->ProcessPayments($givenDate, $PROJECT)) {
+        if ($this->processPayments($givenDate, $PROJECT)) {
             $totalAmount = $this->amount;
             $PROJECT->balance -= $totalAmount;
             $this->state = 'paid';
@@ -75,7 +100,15 @@ class Amortization
         }
     }
 
-    private function ProcessPayments($givenDate, $PROJECT)
+    /**
+     * Checks if conditions for processing payments are met.
+     *
+     * @param DateTime $givenDate
+     * @param Project  $PROJECT
+     *
+     * @return bool
+     */
+    private function processPayments($givenDate, $PROJECT)
     {
         $amortizationDate = $this->schedule_date->format('Y-m-d');
 
@@ -87,6 +120,13 @@ class Amortization
         );
     }
 
+    /**
+     * Checks if the amortization should not be paid yet based on the given date.
+     *
+     * @param DateTime $givenDate
+     *
+     * @return bool
+     */
     private function shouldNotBePaidYet($givenDate)
     {
         return $givenDate < $this->schedule_date && $this->state === 'pending';
