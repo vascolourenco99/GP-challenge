@@ -104,8 +104,8 @@ class Project
 
     /**
      * Process payments on multiple amortizations, optimizing performance by dividing the array into smaller chunks.
-     * To process large quantities of amortizations, 
-     * I found that dividing the array into multiple segments could improve performance and memory management. 
+     * To process large quantities of amortizations, I found that dividing the array into multiple segments could 
+     * improve performance and memory management. 
      * To achieve this result, I start by deciding a size to segment the array (smaller is better for a lot of data), 
      * the total number of amortizations, and an array to store the results. 
      * I used a for loop to divide the array with the parameters I previously defined, 
@@ -128,9 +128,9 @@ class Project
         $results = [];
 
         for ($offset = 0; $offset < $totalAmortizations; $offset += $chunkSize) {
-            $partOfAmportizationsArray = array_slice($amortizations, $offset, $chunkSize);
+            $partOfAmortizationsArray = array_slice($amortizations, $offset, $chunkSize);
 
-            foreach ($partOfAmportizationsArray as $amortization) {
+            foreach ($partOfAmortizationsArray as $amortization) {
                 $result = $amortization->processPaymentsOnAmortization($givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
 
                 $results[] = $result;
