@@ -44,7 +44,7 @@ class ProjectTest extends TestCase
         return new Payment(1, 1, 1, -300.0, 1, 'pending');
     }
 
-    public function testGetAmortizationById_ReturnsCorrectAmortization()
+    public function testProject_ReturnsCorrectAmortization()
     {
         $project = $this->testProject();
         $amortizationId = 1;
@@ -58,7 +58,7 @@ class ProjectTest extends TestCase
         $this->assertEquals($amortizationId, $amortization->id);
     }
 
-    public function testGetAmortizationById_ReturnsNullForNonExistingAmortization()
+    public function testProject_ReturnsNullForNonExistingAmortization()
     {
         $project = $this->testProject();
         $nonExistingAmortizationId = 999;
@@ -68,7 +68,7 @@ class ProjectTest extends TestCase
         $this->assertNull($amortization);
     }
 
-    public function testAddPaymentToBalance_UpdatesBalance()
+    public function testProject_UpdatesBalance()
     {
         $project = $this->testProject();
         $amortization = $this->testAmortization();
@@ -82,7 +82,7 @@ class ProjectTest extends TestCase
         $this->assertEquals($expectedBalance, $project->balance);
     }
 
-    public function testAddPaymentToBalance_NoUpdatesBalanceIfAmoutIsNegative()
+    public function testProject_NoUpdatesBalanceIfAmoutIsNegative()
     {
         $project = $this->testProject();
         $amortization = $this->testAmortization();
@@ -98,7 +98,7 @@ class ProjectTest extends TestCase
         $this->assertEquals($expectedBalance, $result);
     }
 
-    public function testAddPaymentToBalance_IgnoresNonPendingAmortization()
+    public function testProject_IgnoresPaidAmortization()
     {
         $project = $this->testProject();
         $amortization = $this->testAmortization(['state' => 'paid']);

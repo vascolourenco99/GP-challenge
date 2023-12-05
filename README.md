@@ -35,7 +35,7 @@ This file contains PHPUnit test cases for the processPaymentsOnAmortization func
 To run tests, execute the following command in the terminal:
 
 ### notes: 
-!IMPORTANT! if you want to run tests comment the line 72, 73, file `Amortization.php` and paste this code `return $reasonsString;` 
+!IMPORTANT! if you want to run tests comment the line 71, 72, file `Amortization.php` and paste this code `return $reasonsString;` 
 
 ```bash
 php vendor/bin/phpunit test/AmortizationTest.php.php

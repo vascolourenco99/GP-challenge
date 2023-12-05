@@ -66,7 +66,6 @@ class Amortization
         }
 
         try {
-
             $reasons = reasonsToNotWork($amortizationDate, $givenDate, $PROJECT, $this->amount);
             $reasonsString = implode(', ', $reasons);
             sendEmail($mailer, $PROMOTER->email, $PROJECT->name, $reasonsString);  // <- comment this to run the test without sending emails

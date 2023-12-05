@@ -13,10 +13,10 @@ require_once 'classes/GlobalGroup.php';
 require_once 'classes/Member.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
-
+$mailer = new PHPMailer(true);
 $givenDate = new DateTime('2023-12-06'); 
 
-$mailer = new PHPMailer(true);
+
 
 $globalGroup = new GlobalGroup(1, 'Project Dummy Global Group', []);
 $member1 = new Member(1, 'user1@gmail.com');
@@ -62,7 +62,6 @@ for ($i = 1; $i < 3; $i++) {
 
 $result = Project::projectAmortizationOptimize($PROJECT->amortizations, $givenDate, $mailer, $PROJECT, $PROMOTER, $globalGroup);
 
-// uncomment the following line to see the result of the optimize function
 foreach ($result as $result) {
   echo $result . '<br/>';
 }
