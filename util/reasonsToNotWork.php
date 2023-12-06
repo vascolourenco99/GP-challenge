@@ -10,7 +10,7 @@
  *
  * @return array 
  */
-function reasonsToNotWork($amortizationDate, $givenDate, $PROJECT, $amount) : array
+function reasonsForDelayed($amortizationDate, $givenDate, $PROJECT, $amount) : array
 {
     $reasons = [];
 
