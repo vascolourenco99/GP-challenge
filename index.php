@@ -2,7 +2,7 @@
 /* 
   This file is used to create instances of classes 
   to set up a "production environment" for testing 
-  the projectAmortizationOptimize(line 71) function.
+  the projectAmortizationOptimize(line 66) function.
 */
 
 
@@ -23,8 +23,8 @@ $givenDate = new DateTime('2023-12-06');
 
 // Create a global group for testing purposes.
 $globalGroup = new GlobalGroup(1, 'Project Dummy Global Group', []);
-$member1 = new Member(1, 'user1@gmail.com');
-$member2 = new Member(2, 'user2@gmail.com');
+$member1 = new Member(1, 'user1@gmail.com'); // <- this line 
+$member2 = new Member(2, 'user2@gmail.com'); // <- this line
 $globalGroup->addMember($member1);
 $globalGroup->addMember($member2);
 
